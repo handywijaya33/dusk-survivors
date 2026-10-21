@@ -35,6 +35,14 @@ public class GameManager : MonoBehaviour
 
     public float DespawnDistance => ViewRadius * 2f;
 
+    /// <summary>A random point just outside the visible area around the player.</summary>
+    public Vector2 RandomSpawnPoint()
+    {
+        Vector2 center = Player != null ? Player.Pos : Vector2.zero;
+        float a = Random.value * Mathf.PI * 2f;
+        return center + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * (ViewRadius + 1f);
+    }
+
     struct FloatingText
     {
         public Vector2 Pos;
@@ -183,7 +191,7 @@ public class GameManager : MonoBehaviour
         SetState(GameState.LevelUp);
     }
 
-    void Choose(int i)
+    public void Choose(int i)
     {
         if (i < 0 || i >= options.Count) return;
         options[i].Apply();
@@ -377,7 +385,9 @@ public class GameManager : MonoBehaviour
         Shadowed(new Rect(0, 26, W, 40), FormatTime(RunTime), new GUIStyle(center) { fontSize = 32, fontStyle = FontStyle.Bold });
 
         Shadowed(new Rect(W - 220, 30, 210, 26), $"Kills  {Kills}", new GUIStyle(label) { alignment = TextAnchor.UpperRight });
-        Shadowed(new Rect(W - 220, 56, 210, 26), $"<color=#FFD840>Gold  {RunGold}</color>", new GUIStyle(label) { alignment = TextAnchor.UpperRight });
+        var goldStyle = new GUIStyle(label) { alignment = TextAnchor.UpperRight };
+        goldStyle.normal.textColor = new Color(1f, 0.85f, 0.25f);
+        Shadowed(new Rect(W - 220, 56, 210, 26), $"Gold  {RunGold}", goldStyle);
 
         float y = 30;
         foreach (var w in Player.Weapons)

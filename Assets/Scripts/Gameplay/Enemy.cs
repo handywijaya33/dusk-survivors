@@ -65,7 +65,14 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (Dead || !GameManager.I.Playing) return;
+        // Destroy() runs OnDisable immediately, which would modify All while a weapon is iterating it,
+        // so killed enemies are only hidden in Die() and destroyed here, outside any loop.
+        if (Dead)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        if (!GameManager.I.Playing) return;
         var p = Player.I;
         if (p == null) return;
         float dt = Time.deltaTime;
@@ -90,7 +97,7 @@ public class Enemy : MonoBehaviour
             for (int i = 0; i < All.Count; i++)
             {
                 var o = All[i];
-                if (o == this) continue;
+                if (o == this || o.Dead) continue;
                 Vector2 d = Pos - o.Pos;
                 float min = Radius + o.Radius;
                 if (d.x > min || d.x < -min || d.y > min || d.y < -min) continue;
@@ -148,6 +155,7 @@ public class Enemy : MonoBehaviour
             else if (r < 0.016f) Pickup.Spawn(PickupKind.Vacuum, Pos + off, 1);
             else if (r < 0.07f) Pickup.Spawn(PickupKind.Gold, Pos + off, Random.Range(1, 4));
         }
-        Destroy(gameObject);
+        sr.enabled = false;
+        eyes.gameObject.SetActive(false);
     }
 }

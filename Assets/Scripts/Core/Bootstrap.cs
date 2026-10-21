@@ -8,5 +8,6 @@ public static class Bootstrap
     {
         if (Object.FindAnyObjectByType<GameManager>() == null)
             new GameObject("GameManager").AddComponent<GameManager>();
+        AutoPlay.TryStart();
     }
 }

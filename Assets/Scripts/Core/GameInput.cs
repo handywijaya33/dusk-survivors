@@ -6,8 +6,12 @@ using UnityEngine.InputSystem;
 /// <summary>Movement input that works with either the legacy Input Manager or the new Input System.</summary>
 public static class GameInput
 {
+    /// <summary>When set, replaces player input (used by the -autoplay smoke test).</summary>
+    public static Vector2? Override;
+
     public static Vector2 Move()
     {
+        if (Override.HasValue) return Override.Value;
         Vector2 v = Vector2.zero;
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         var k = Keyboard.current;

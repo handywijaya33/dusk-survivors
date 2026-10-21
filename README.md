@@ -3,6 +3,8 @@
 A small **Vampire Survivors–style roguelite** made in Unity. You move, and your weapons attack on their own.
 Survive the night for **10 minutes** while the horde grows. Gold you earn carries over between runs and buys permanent upgrades.
 
+![Gameplay](docs/screenshot.png)
+
 Everything (sprites, UI, enemies, effects) is generated from code at runtime, so the project has **no art assets** and opens instantly.
 
 ## How to play
@@ -39,6 +41,12 @@ The game bootstraps itself (`Bootstrap.cs` uses `RuntimeInitializeOnLoadMethod`)
 
 To build: **File → Build Profiles** (or Build Settings), and `Main` is already in the scene list.
 
+## Smoke test
+
+`Dusk Survivors → Build Windows` (or `-executeMethod BuildScript.BuildWindows`) builds to `Builds/Windows`.
+Running the build with `-autoplay` lets a bot play with every weapon at 4x speed for 90 seconds, then logs
+`AUTOPLAY RESULT ... exceptions=N` and exits with code 0 (clean) or 2 (errors logged).
+
 ## Code layout
 
 ```
@@ -46,6 +54,7 @@ Assets/Scripts/
   Core/        Bootstrap, GameManager (state, camera, XP, all UI via IMGUI), SpriteFactory, Effect, GameInput
   Gameplay/    Player, Enemy + EnemyTypes, EnemySpawner, Projectile, Pickup, Weapons, Upgrades (passives + level-up rolls)
   Meta/        MetaProgression (permanent upgrades, save data)
+Assets/Editor/ BuildScript (menu + batch-mode Windows build)
 ```
 
 Adding a weapon: subclass `Weapon` in `Weapons.cs` and add it to `WeaponCatalog`. It then appears in level-up rolls and in the starting-weapon picker automatically.
